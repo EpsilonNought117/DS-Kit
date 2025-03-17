@@ -248,7 +248,7 @@ void* vectorPopBack(voidVector* vec_ptr, size_t dt_size)
     if (!temp)
     {
         assert("Memory reallocation failed due to insufficient memory capacity.");
-        return;
+        return NULL;
     }
 
     memcpy(temp, vec_ptr->data + dt_size * (vec_ptr->length - 1), dt_size);
