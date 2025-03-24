@@ -39,38 +39,39 @@ Vector(void) voidVector;
 
 #define MAX_BYTES (size_t)(1 << 40) // No more than 1 TB (default)
 
-void vectorInit(voidVector* vec_ptr, size_t init_size, size_t dt_size);
+void vectorInit(voidVector * vec_ptr, size_t init_size, size_t dt_size);
 #define VECTOR_INIT(vec_ptr, init_size) vectorInit((voidVector*)vec_ptr, init_size, sizeof(*(vec_ptr->data)))
 
-void vectorResize(voidVector* vec_ptr, size_t new_size, size_t dt_size);
+void vectorResize(voidVector * vec_ptr, size_t new_size, size_t dt_size);
 #define VECTOR_RESIZE(vec_ptr, new_size) vectorResize((voidVector*)vec_ptr, (size_t)new_size, sizeof(*(vec_ptr->data)))
 
-void vectorFree(voidVector* vec_ptr, void (*dt_destroy)(void*), size_t dt_size);
+void vectorFree(voidVector * vec_ptr, void (*dt_destroy)(void*), size_t dt_size);
 #define VECTOR_FREE(vec_ptr, dt_destroy) vectorFree((voidVector*)vec_ptr, (void(*)(void*))dt_destroy, sizeof(*(vec_ptr->data)))
 
-void vectorPushBack(voidVector* vec_ptr, const void* element, size_t dt_size);
+void vectorPushBack(voidVector * vec_ptr, const void* element, size_t dt_size);
 #define VECTOR_PUSHBACK(vec_ptr, element) \
 ( TYPE_CHECK_PTR(vec_ptr->data, element), vectorPushBack((voidVector*)vec_ptr, (const void*)element, sizeof(*(vec_ptr->data))) )
 
-void vectorPopBack(voidVector* vec_ptr, size_t dt_size);
+void vectorPopBack(voidVector * vec_ptr, size_t dt_size);
 #define VECTOR_POPBACK(vec_ptr) vectorPopBack((voidVector*)vec_ptr, sizeof(*(vec_ptr->data))) 
 
-void vectorShrinkToFit(voidVector* vec_ptr, size_t dt_size);
+void vectorShrinkToFit(voidVector * vec_ptr, size_t dt_size);
 #define VECTOR_SHRINKTOFIT(vec_ptr) vectorShrinkToFit((voidVector*)vec_ptr, sizeof(*(vec_ptr->data)))
 
-void vectorInsert(voidVector* vec_ptr, size_t index, const void* element, size_t dt_size);
+void vectorInsert(voidVector * vec_ptr, size_t index, const void* element, size_t dt_size);
 #define VECTOR_INSERT(vec_ptr, index, element) \
 ( TYPE_CHECK_PTR(vec_ptr->data, element), vectorInsert((voidVector*)vec_ptr, (size_t)index, (const void*)element, sizeof(*(vec_ptr->data))) )
 
-void vectorRemove(voidVector* vec_ptr, size_t index, size_t dt_size);
+void vectorRemove(voidVector * vec_ptr, size_t index, size_t dt_size);
 #define VECTOR_REMOVE(vec_ptr, index) vectorRemove((voidVector*)vec_ptr, (size_t)index, sizeof(*(vec_ptr->data)))
 
-void* vectorAtIndex(voidVector* vec_ptr, size_t index, size_t dt_size);
+void* vectorAtIndex(voidVector * vec_ptr, size_t index, size_t dt_size);
 #define VECTOR_BACK(vec_ptr)  vectorAtIndex((voidVector*)vec_ptr, vec_ptr->length - 1, sizeof(*(vec_ptr->data)))
 #define VECTOR_FRONT(vec_ptr) vectorAtIndex((voidVector*)vec_ptr, 0, sizeof(*(vec_ptr->data)))
 #define VECTOR_ATINDEX(vec_ptr, index) vectorAtIndex((voidVector*)vec_ptr, index, sizeof(*(vec_ptr->data)))
 
 void vectorAppend(voidVector * dest, voidVector * src, size_t index, size_t dt_size);
+
 #define VECTOR_APPEND(dest, src, dest_index)  \
 ( TYPE_CHECK_PTR(dest->data, src->data), vectorAppend((voidVector*)dest, (voidVector*)src, (size_t) dest_index, sizeof(*(src->data))) )
 
@@ -91,11 +92,29 @@ Stack(void) voidStack;
 #define STACK_SIZE(st_ptr)              (st_ptr->length)
 
 /*******************************************/
-/****************  QUEUE  ******************/
+/****************  DEQUE  ******************/
 /*******************************************/
 
+#define Deque(T)        \
+typedef struct          \
+{                       \
+    T* data;            \
+    size_t length;      \
+    size_t capacity;    \
+    size_t front;       \
+    size_t back;        \
+}                       
+
+Deque(void) voidDeque;
+
+void dequeInit(voidDeque * d_ptr, size_t init_size, size_t dt_size);
+#define DEQUE_INIT(d_ptr, init_size) dequeInit((voidDeque)d_ptr, (size_t)init_size, sizeof(*(d_ptr->data)))
+
+void dequeResize(voidDeque * d_ptr, size_t new_size, size_t dt_size);
+#define DEQUE_RESIZE(d_ptr, new_size) dequeResize((voidDeque*)d_ptr, (size_t)new_size, sizeof(*(d_ptr->data)))
+
 /*******************************************/
-/****************  DEQUE  ******************/
+/****************  QUEUE  ******************/
 /*******************************************/
 
 /*******************************************/
@@ -107,11 +126,11 @@ Stack(void) voidStack;
 /*******************************************/
 
 /*******************************************/
-/************  PRIORITY QUEUE  *************/
+/****************  HEAP  *******************/
 /*******************************************/
 
 /*******************************************/
-/****************  HEAP  *******************/
+/************  PRIORITY QUEUE  *************/
 /*******************************************/
 
 /*******************************************/
