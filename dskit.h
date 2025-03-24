@@ -16,7 +16,7 @@
 /*************  MISCELLANEOUS  *************/
 /*******************************************/
 
-#define TYPE_CHECK_PTR(x, y) sizeof(x = y)
+#define TYPE_CHECK_PTR(x_ptr, y_ptr) sizeof(x_ptr = y_ptr)
 
 #define LOG_N_ABORT(msg) do { \
     fprintf(stderr, "ERROR: %s\nFile: %s\nLine: %d\n", msg, __FILE__, __LINE__); \
@@ -78,8 +78,24 @@ void vectorAppend(voidVector * dest, voidVector * src, size_t index, size_t dt_s
 /****************  STACK  ******************/
 /*******************************************/
 
+#define Stack(T) Vector(T)                              
+
+Stack(void) voidStack;
+
+#define STACK_INIT(st_ptr, size)        VECTOR_INIT(st_ptr, size)
+#define STACK_RESIZE(st_ptr, new_size)  VECTOR_RESIZE(st_ptr, new_size)
+#define STACK_PUSH(st_ptr, elem)        VECTOR_PUSHBACK(st_ptr, elem)
+#define STACK_POP(st_ptr)               VECTOR_POPBACK(st_ptr)
+#define STACK_PEEK(st_ptr)              VECTOR_BACK(st_ptr)
+#define STACK_CLEAR(st_ptr, dt_destroy) VECTOR_FREE(st_ptr, dt_destroy)
+#define STACK_SIZE(st_ptr)              (st_ptr->length)
+
 /*******************************************/
 /****************  QUEUE  ******************/
+/*******************************************/
+
+/*******************************************/
+/****************  DEQUE  ******************/
 /*******************************************/
 
 /*******************************************/
@@ -88,10 +104,6 @@ void vectorAppend(voidVector * dest, voidVector * src, size_t index, size_t dt_s
 
 /*******************************************/
 /****************  LIST  *******************/
-/*******************************************/
-
-/*******************************************/
-/****************  DEQUE  ******************/
 /*******************************************/
 
 /*******************************************/
