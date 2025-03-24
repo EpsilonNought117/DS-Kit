@@ -71,9 +71,12 @@ void* vectorAtIndex(voidVector * vec_ptr, size_t index, size_t dt_size);
 #define VECTOR_ATINDEX(vec_ptr, index) vectorAtIndex((voidVector*)vec_ptr, index, sizeof(*(vec_ptr->data)))
 
 void vectorAppend(voidVector * dest, voidVector * src, size_t index, size_t dt_size);
-
 #define VECTOR_APPEND(dest, src, dest_index)  \
 ( TYPE_CHECK_PTR(dest->data, src->data), vectorAppend((voidVector*)dest, (voidVector*)src, (size_t) dest_index, sizeof(*(src->data))) )
+
+void vectorSort(voidVector * vec_ptr, int (*comparator)(const void*, const void*), size_t dt_size);
+#define VECTOR_SORT(vec_ptr, comparator) \
+vectorSort((voidVector*)vec_ptr, (int(*)(const void*, const void*))comparator, sizeof(*(vec_ptr->data)))
 
 /*******************************************/
 /****************  STACK  ******************/
@@ -87,9 +90,10 @@ Stack(void) voidStack;
 #define STACK_RESIZE(st_ptr, new_size)  VECTOR_RESIZE(st_ptr, new_size)
 #define STACK_PUSH(st_ptr, elem)        VECTOR_PUSHBACK(st_ptr, elem)
 #define STACK_POP(st_ptr)               VECTOR_POPBACK(st_ptr)
-#define STACK_PEEK(st_ptr)              VECTOR_BACK(st_ptr)
+#define STACK_PEEKTOP(st_ptr)           VECTOR_BACK(st_ptr)
 #define STACK_CLEAR(st_ptr, dt_destroy) VECTOR_FREE(st_ptr, dt_destroy)
 #define STACK_SIZE(st_ptr)              (st_ptr->length)
+#define STACK_ISEMPTY(st_ptr)           (st_ptr->length == 0 ? 1 : 0)
 
 /*******************************************/
 /****************  DEQUE  ******************/
@@ -113,6 +117,32 @@ void dequeInit(voidDeque * d_ptr, size_t init_size, size_t dt_size);
 void dequeResize(voidDeque * d_ptr, size_t new_size, size_t dt_size);
 #define DEQUE_RESIZE(d_ptr, new_size) dequeResize((voidDeque*)d_ptr, (size_t)new_size, sizeof(*(d_ptr->data)))
 
+void dequeFree(voidDeque * d_ptr, void (*dt_destroy)(void*), size_t dt_size);
+#define DEQUE_FREE(d_ptr, dt_destroy) dequeFree((voidDeque*)d_ptr, (void(*)(void*))dt_destroy, sizeof(*(d_ptr->data)))
+
+void dequeShrinkToFit(voidDeque * d_ptr, size_t dt_size);
+#define DEQUE_SHRINKTOFIT(d_ptr) dequeShrinkToFit((voidDeque*)d_ptr, sizeof(*(d_ptr->data)))
+
+void dequeEnqueueFront(voidDeque* d_ptr, const void* elem, size_t dt_size);
+#define DEQUE_ENQUEUEFRONT(d_ptr, elem) \
+( TYPE_CHECK_PTR(d_ptr->data, elem), dequeEnqueueFront((voidDeque*)d_ptr, (const void*)elem, sizeof(*(d_ptr->data))) )
+
+void dequeEnqueueBack(voidDeque* d_ptr, const void* elem, size_t dt_size);
+#define DEQUE_ENQUEUEBACK(d_ptr, elem) \
+( TYPE_CHECK_PTR(d_ptr->data, elem), dequeEnqueueBack((voidDeque*)d_ptr, (const void*)elem, sizeof(*(d_ptr->data))) )
+
+void dequeDequeueFront(voidDeque* d_ptr, size_t dt_size);
+#define DEQUE_DEQUEUEFRONT(d_ptr) dequeDequeueFront((voidDeque*)d_ptr, sizeof(*(d_ptr->data)))
+
+void dequeDequeueBack(voidDeque* d_ptr, size_t dt_size);
+#define DEQUE_DEQUEUEBACK(d_ptr) dequeDequeueBack((voidDeque*)d_ptr, sizeof(*(d_ptr->data)))
+
+void* dequePeekFront(voidDeque* d_ptr, size_t dt_size);
+#define DEQUE_PEEKFRONT(d_ptr) dequePeekFront((voidDeque*)d_ptr, sizeof(*(d_ptr->data)))
+
+void* dequePeekBack(voidDeque* d_ptr, size_t dt_size);
+#define DEQUE_PEEKBACK(d_ptr)  dequePeekBack((voidDeque*)d_ptr, sizeof(*(d_ptr->data)))
+
 /*******************************************/
 /****************  QUEUE  ******************/
 /*******************************************/
@@ -134,6 +164,10 @@ void dequeResize(voidDeque * d_ptr, size_t new_size, size_t dt_size);
 /*******************************************/
 
 /*******************************************/
+/**********  ORDERED MULTI-SET *************/
+/*******************************************/
+
+/*******************************************/
 /************  HASH MAP  *******************/
 /*******************************************/
 
@@ -143,10 +177,6 @@ void dequeResize(voidDeque * d_ptr, size_t new_size, size_t dt_size);
 
 /*******************************************/
 /************  UNORDERED SET  **************/
-/*******************************************/
-
-/*******************************************/
-/************  MULTISET  *******************/
 /*******************************************/
 
 /*******************************************/
@@ -375,6 +405,23 @@ void vectorAppend(voidVector* dest, voidVector* src, size_t dest_index, size_t d
 
     dest->length = new_total_length;
     return;
+}
+
+void vectorSort(voidVector* vec_ptr, int (*comparator)(const void*, const void*), size_t dt_size)
+{
+    qsort(vec_ptr->data, vec_ptr->length, dt_size, comparator);
+    return;
+}
+
+/*******************************************/
+/********** DEQUE IMPLEMENTATION ***********/
+/*******************************************/
+
+void dequeInit(voidDeque* d_ptr, size_t init_size, size_t dt_size)
+{
+    assert(d_ptr != NULL && dt_size && init_size < (MAX_BYTES / dt_size));
+
+    
 }
 
 #endif
